@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap Image Gallery</title>
+   <link rel="stylesheet" href="ppp.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ 
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+  
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #eaeaea;
+    }
+
+    .container1 {
+      position: relative;
+      aspect-ratio: 16/9; /* keeps proportion */
+      background: #f5f5f5;
+      box-shadow: 0 30px 50px #dbdbdb;
+      overflow: hidden;
+
+    }
+
+    .container1 .slide1 .item {
+      width: 200px;
+      height: 300px;
+      position: absolute;
+      top: 50%;
+      transform: translate(0, -50%);
+      border-radius: 20px;
+      box-shadow: 0 30px 50px #505050;
+      background-position: 50% 50%;
+      background-size: cover;
+      display: inline-block;
+      transition: 0.9s;
+    }
+
+    .slide1 .item:nth-child(1),
+    .slide1 .item:nth-child(2) {
+      top: 0;
+      left: 0;
+      transform: translate(0, 0);
+      border-radius: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .slide1 .item:nth-child(3) { left: 60%; }
+    .slide1 .item:nth-child(4) { left: calc(60% + 220px); }
+    .slide1 .item:nth-child(5) { left: calc(60% + 440px); }
+
+    .slide1 .item:nth-child(n + 6) {
+      left: calc(60% + 660px);
+      opacity: 0;
+    }
+
+    .item .content {
+      position: absolute;
+      top: 80%;
+      left: 10%;
+      width: 90%;
+      max-width: 300px;
+      transform: translate(0, -50%);
+      font-family: system-ui;
+      display: none;
+    }
+
+    .slide1 .item:nth-child(2) .content {
+      display: block;
+    }
+
+    .content .name {
+      font-size: 2rem;
+      text-transform: uppercase;
+      font-weight: bold;
+      opacity: 0;
+      animation: animate 3s ease-in-out 1 forwards;
+    }
+
+    .content .des {
+      margin: 10px 0;
+      opacity: 0;
+      animation: animate 1s ease-in-out 0.3s 1 forwards;
+    }
+
+    .content button {
+      opacity: 0;
+      animation: animate 1s ease-in-out 0.6s 1 forwards;
+    }
+    .container{
+      max-width: 1290px;
+      padding-top: 5px;
+    }
+
+    @keyframes animate {
+      from {
+        opacity: 0;
+        transform: translate(0, 100px);
+        filter: blur(33px);
+      }
+      to {
+        opacity: 1;
+        transform: translate(0);
+        filter: blur(0);
+      }
+    }
+
+    /* ------------------ 📱 Tablet (<=768px) ------------------ */
+    @media (max-width: 768px) {
+      .container1 {
+        aspect-ratio: 4/3;
+      }
+      .slide1 .item:nth-child(3) { width: 140px; height: 200px; left: 60%; }
+      .slide1 .item:nth-child(4) { width: 120px; height: 180px; left: calc(60% + 160px); }
+      .slide1 .item:nth-child(5) { width: 100px; height: 160px; left: calc(60% + 290px); }
+      .content .name { font-size: 1.5rem; }
+    }
+
+    /* ------------------ 📱 Mobile (<=480px) ------------------ */
+    @media (max-width: 480px) {
+      .container1 {
+        aspect-ratio: 4/3;
+        border-radius: 0;
+      }
+      .slide1 .item:nth-child(3) { width: 110px; height: 150px; left: 65%; }
+      .slide1 .item:nth-child(4) { width: 90px; height: 130px; left: calc(65% + 130px); }
+      .slide1 .item:nth-child(5) { width: 70px; height: 110px; left: calc(65% + 220px); }
+      .content .name { font-size: 1.2rem; }
+      .content .des { font-size: 0.85rem; }
+    }
+  /* //gallery img list */
+    .gallery img {
+      width: 100%;
+      height: 220px; /* uniform height */
+      object-fit: cover;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+    #modalImage {
+      width: 100%;
+      height: auto;
+      max-height: 80vh;
+      object-fit: contain;
+    }
+    .modal-body {
+      position: relative;
+      padding: 0;
+    }
+    /* Navigation arrows */
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2rem;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .nav-arrow:hover {
+      background: rgba(0,0,0,0.7);
+    }
+    #prevBtn { left: 10px; }
+    #nextBtn { right: 10px; }
+    /* Caption overlay */
+    #modalCaption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      padding: 8px 12px;
+      font-size: 1rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="container d-flex justify-content-around align-items-center flex-wrap" id="header-container">
+    
+    <!-- Image (hidden by default) -->
+    <img src="pp18b.jpg" alt="Narendra Modi" id="menu-img" class="headimg">
+
+    <!-- Name -->
+    <h1 id="main-title">Paidi Rakesh Reddy</h1>
+
+    <!-- Bootstrap Navbar -->
+    <nav class="navbar navbar-expand-lg p-0">
+      <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <i class="fa fa-bars fa-lg"></i>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto text-center w-100">
+          <li class="nav-item"><a class="nav-link active" href="Index.html">Home</a></li>
+          <!-- <li class="nav-item"><a class="nav-link " href="#about">About</a></li> -->
+          <li class="nav-item"><a class="nav-link" href="Biograghy.html">Biography</a></li>
+          
+          <li class="nav-item"><a class="nav-link" href="News.html">News & Timeline</a></li>
+          <li class="nav-item"><a class="nav-link" href="Video.html">Videos</a></li>
+          <li class="nav-item"><a class="nav-link" href="Gallery.html">Gallery</a></li>
+          <li class="nav-item"><a class="nav-link" href="Contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <select id="lang-select" aria-label="Language Switcher">
+      <option value="en">English</option>
+      <option value="hi">Hindi</option>
+    </select>
+  </div>
+</header>
+
+<div class="container  " tabindex="-1" aria-labelledby="gallery-title">
+    <div class="container1 mx-auto rounded-3 shadow-lg">
+      <div class="slide1">
+        <div class="item" style="background-image: url(rake12.jpg);">
+          <div class="content text-start text-white bg-dark bg-opacity-50 p-3 rounded">
+            <!-- <div class="name">Switzerland</div> -->
+            <div class="des">సింగరేణి భరోసా యాత్రలో భాగంగా నేడు భూపాలపల్లి జిల్లా లో K.T.K 8వ గని పై కార్మికులతో నిర్వహించిన గెట్ మీటింగ్ సమావేశంలో బిజెపి రాష్ట్ర అధ్యక్షులు ఎన్ రామచంద్రరావు గారు ముఖ్య అతిథిగా విచ్చేసిన కేంద్ర బొగ్గు & గనుల శాఖ మంత్రి వర్యులు జి.కిషన్ రెడ్డి, గారి తో మరియు నాతోటి బీజేపీ శాసనసభ్యులు ఎమ్మెల్సీలు తో కలిసి పాల్గొన్నాను.</div>
+            <button class="btn btn-light fw-semibold btn-sm">See More</button>
+          </div>
+        </div>
+        <div class="item" style="background-image: url(rake14.jpg);">
+          <div class="content text-start text-white bg-dark bg-opacity-50 p-3 rounded">
+            <!-- <div class="name">Finland</div> -->
+            <div class="des">ఈరోజు హైదరాబాడద్ కు విచ్చేసిన కేంద్ర రైల్వే శాఖ మంత్రి వర్యులు శ్రీ అశ్విని వైష్ణవ్ గారిని కలిసి ఆర్మూర్- సికింద్రాబాద్ వయా డిచ్ పల్లి మీదుగా రైల్వే లైన్ ఏర్పాటుకు చర్యలు తీసుకోవాలని వినతి పత్రం ద్వారా కోరడం జరిగింది. ఈ రైల్వే లైన్ ఏర్పాటు అయి అందుబాటు లోకి వస్తే ఆర్మూర్, బాల్కొండ నియోజకవర్గం మరియు జగిత్యాల జిల్లా ప్రజలకు రైల్వే ప్రయాణం మరింత సౌకర్యంగా సులభతరంగా మారుతుంది అని తెలియజేశాను</div>
+            <button class="btn btn-light fw-semibold btn-sm">See More</button>
+          </div>
+        </div>
+        <div class="item" style="background-image: url(rakesh011.jpg);">
+          <div class="content text-start text-white bg-dark bg-opacity-50 p-3 rounded">
+            <!-- <div class="name">Iceland</div> -->
+            <div class="des">డయల్ యువర్ ఎమ్మెల్యే way2news కార్యక్రమంలో భాగంగా నియోజకవర్గ సమస్యలు తెలుసుకుని అధికారులు దృష్టికి తీసుకెళ్లడం జరిగింది</div>
+            <button class="btn btn-light fw-semibold btn-sm">See More</button>
+          </div>
+        </div>
+        <div class="item" style="background-image: url(rake10.jpg);">
+          <div class="content text-start text-white bg-dark bg-opacity-50 p-3 rounded">
+            <!-- <div class="name">Australia</div> -->
+            <div class="des">తోటి శాసనసభ్యులు ఆదిలాబాద్ జిల్లా సిర్పూర్ ఎమ్మెల్యే పాల్వాయి హరీష్ గారి జన్మదిన సందర్భంగా హైదరాబాద్ లోని నా నివాసంలో ఎమ్మెల్యేలు అందరం కలిసి జన్మదిన వేడుకలు నిర్వహించడం జరిగింది💐💐</div>
+            <button class="btn btn-light fw-semibold btn-sm">See More</button>
+          </div>
+        </div>
+        <div class="item" style="background-image: url(rake06.jpg);">
+          <div class="content text-start text-white bg-dark bg-opacity-50 p-3 rounded">
+            <!-- //<div class="name">Netherland</div> -->
+            <div class="des">గుత్ప గ్రామంలో పలు ఆత్మీయ కుటుంబాలను పరామర్శించాను..
+
+*బీజేపీ సీనియర్ నాయకులు గుణవంత్ గారి తల్లి గారు ఇటీవల పరమపదించడంతో వారి కుటుంబాన్ని పరామర్శించి ప్రగాఢ సానుభూతి తెలియజేశారు 💐
+
+*మాజీ MPTC రాజేందర్ గౌడ్ గారి ఇటీవల కాలికి శస్త్ర చికిత్స జరగడంతో ఈరోజు వారి ఇంటికి వెళ్లి వారిని పరామర్శించి ప్రస్తుత ఆరోగ్యం పరిస్థితి గురించి అడిగి తెలుసుకుని త్వరగా కోలుకోవాలని కోరుకోవడం జరిగింది.
+
+ఇటీవలే బైక్ యాక్సిడెంట్ లో చికిత్స పొందుతూ మరణించిన యగ్నేష్ గారి కుటుంబ సభ్యులను పరామర్శించి ప్రగాఢ సానుభూతి తెలియజేశాను💐</div>
+            <button class="btn btn-light fw-semibold btn-sm">See More</button>
+          </div>
+        </div>
+  <!-- //      <div class="item" style="background-image: url(https://i.ibb.co/RNkk6L0/img6.jpg);">
+          <div class="content text-start text-white bg-dark bg-opacity-50 p-3 rounded">
+             </div> -->
+        </div>
+      </div>
+
+      <div class="button text-center position-absolute bottom-0 w-100 mb-2">
+        <button class="btn btn-outline-dark btn-sm mx-1 prev"></button>
+        <button class="btn btn-outline-dark btn-sm mx-1 next"></button>
+      </div>
+    </div>
+  </div>
+<div class="container py-2">
+  <h2 class="text-center mb-4">Image Gallery</h2>
+  <div class="row g-3 gallery">
+    <!-- Gallery Images -->
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <img src="https://res.cloudinary.com/dv5eromyn/image/upload/v1784132551/rakefb_ivjfex.jpg" alt="Beautiful Mountain View" class="img-fluid">
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <img src="https://res.cloudinary.com/dv5eromyn/image/upload/v1784132549/rakefb03_ixqicd.jpg" alt="River flowing through forest" class="img-fluid">
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <img src="https://res.cloudinary.com/dv5eromyn/image/upload/v1784132549/rakefb04_ietrjm.jpg" alt="PM Narendra Modi at G20" class="img-fluid">
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <img src="https://res.cloudinary.com/dv5eromyn/image/upload/v1784132548/rakefb08_hfre7r.jpg" alt="PM Modi addressing crowd" class="img-fluid">
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <img src="https://res.cloudinary.com/dv5eromyn/image/upload/v1784132548/rakefb05_edz4cf.jpg" alt="Serene lake surrounded by trees" class="img-fluid">
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <img src="https://res.cloudinary.com/dv5eromyn/image/upload/v1784132547/rakefb11_wnde7z.jpg" alt="Snow covered peaks" class="img-fluid">
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <img src="https://res.cloudinary.com/dv5eromyn/image/upload/v1784132547/rakefb12_w6lehy.jpg" alt="PM Modi waving to people" class="img-fluid">
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <img src="https://res.cloudinary.com/dv5eromyn/image/upload/v1784133249/rakesp06_wb1dal.jpg" alt="PM Modi smiling" class="img-fluid">
+    </div>
+     <div class="col-sm-6 col-md-4 col-lg-3">
+      <img src="https://res.cloudinary.com/dv5eromyn/image/upload/v1784132506/rakefb14_-_Copy_jl9g0q.jpg" alt="PM Modi smiling" class="img-fluid">
+    </div> <div class="col-sm-6 col-md-4 col-lg-3">
+      <img src="https://res.cloudinary.com/dv5eromyn/image/upload/v1784132506/rakefb13_jet29c.jpg" alt="PM Modi smiling" class="img-fluid">
+    </div> <div class="col-sm-6 col-md-4 col-lg-3">
+      <img src="https://res.cloudinary.com/dv5eromyn/image/upload/v1784132504/rake15_nezh30.jpg" alt="PM Modi smiling" class="img-fluid">
+    </div> <div class="col-sm-6 col-md-4 col-lg-3">
+      <img src="https://res.cloudinary.com/dv5eromyn/image/upload/v1784132504/rake16_r2uop4.jpg" alt="PM Modi smiling" class="img-fluid">
+    </div> <div class="col-sm-6 col-md-4 col-lg-3">
+      <img src="https://res.cloudinary.com/dv5eromyn/image/upload/v1784132547/rakefb09_lw3hcu.jpg" alt="PM Modi smiling" class="img-fluid">
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <img src="https://res.cloudinary.com/dv5eromyn/image/upload/v1784132550/rakefb02_jzkabr.jpg" alt="PM Modi portrait" class="img-fluid">
+    </div>
+     <div class="col-sm-6 col-md-4 col-lg-3">
+      <img src="https://res.cloudinary.com/dv5eromyn/image/upload/v1784133250/rakesp5_shnsvr.jpg" alt="PM Modi portrait" class="img-fluid">
+    </div>
+     <div class="col-sm-6 col-md-4 col-lg-3">
+      <img src="https://res.cloudinary.com/dv5eromyn/image/upload/v1784132547/rakefb10_mvgmub.jpg" alt="PM Modi portrait" class="img-fluid">
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-dark">
+      <div class="modal-body text-center position-relative">
+        <button id="prevBtn" class="nav-arrow">&lsaquo;</button>
+        <img id="modalImage" src="" class="img-fluid rounded" alt="Selected Image">
+        <button id="nextBtn" class="nav-arrow">&rsaquo;</button>
+        <div id="modalCaption"></div>
+      </div>
+      <div class="modal-footer d-flex justify-content-between">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <a id="downloadBtn" href="" download class="btn btn-primary">Download</a>
+      </div>
+    </div>
+  </div>
+</div>
+<footer>
+  <p>© 2026 Paidi Rakesh Reddy. All rights reserved.</p>
+  <p>
+    <a href="https://x.com/pcsarangi" aria-label="Twitter">Twitter</a> | 
+    <a href="https://www.facebook.com/pcsodisha/" aria-label="Facebook">Facebook</a> | 
+    <a href="https://www.instagram.com/pratap.sarangi/" aria-label="Instagram">Instagram</a>
+  </p>
+</footer>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+   let next = document.querySelector('.next');
+    let prev = document.querySelector('.prev');
+    let slide1 = document.querySelector('.slide1');
+
+    function nextSlidex() {
+      let items = document.querySelectorAll('.item');
+      slide1.appendChild(items[0]);
+    }
+
+    function prevSlidex() {
+      let items = document.querySelectorAll('.item');
+      slide1.prepend(items[items.length - 1]);
+    }
+
+    next.addEventListener('click', nextSlidex);
+    prev.addEventListener('click', prevSlidex);
+
+    setInterval(nextSlidex, 3000);
+  const galleryImages = document.querySelectorAll('.gallery img');
+  const modalImage = document.getElementById('modalImage');
+  const modalCaption = document.getElementById('modalCaption');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  let currentIndex = 0;
+
+  function showImage(index) {
+    modalImage.src = galleryImages[index].src;
+    modalImage.alt = galleryImages[index].alt;
+    modalCaption.textContent = galleryImages[index].alt || "No caption available";
+    downloadBtn.href = galleryImages[index].src;
+    currentIndex = index;
+  }
+
+  galleryImages.forEach((img, index) => {
+    img.addEventListener('click', () => {
+      showImage(index);
+      new bootstrap.Modal(document.getElementById('imageModal')).show();
+    });
+  });
+
+  prevBtn.addEventListener('click', () => {
+    let newIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+    showImage(newIndex);
+  });
+
+  nextBtn.addEventListener('click', () => {
+    let newIndex = (currentIndex + 1) % galleryImages.length;
+    showImage(newIndex);
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (document.getElementById('imageModal').classList.contains('show')) {
+      if (e.key === 'ArrowLeft') prevBtn.click();
+      if (e.key === 'ArrowRight') nextBtn.click();
+    }
+  });
+</script>
+<script src="script.js"></script>
+
+</body>
+</html>
+
